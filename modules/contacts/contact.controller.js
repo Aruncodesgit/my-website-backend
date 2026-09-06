@@ -1,33 +1,86 @@
-const mongoose = require('mongoose'); 
+// const mongoose = require('mongoose'); 
 
-const Contact = require('./contact.model');
-var nodemailer = require('nodemailer');
+// const Contact = require('./contact.model');
+// var nodemailer = require('nodemailer');
 
 
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
+// let transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: process.env.EMAIL_USER,
+//         pass:  process.env.EMAIL_PASS,
+//     }
+// })
+
+// //post contact 
+// module.exports.contact = async (req, res, next) => {
+
+//     try {
+
+//         const contact = new Contact({
+//             name: req.body.name,
+//     email: req.body.email,
+//     phone: req.body.phone,
+//     message: req.body.message
+//         });
+//         var mailOptions = {
+//                     from: process.env.EMAIL_USER,
+//                     to: process.env.EMAIL_USER,
+//                     subject: 'Website Requirement',
+                    
+                
+//         }
+        
+//         const doc = await contact.save();
+//         if(doc){
+//              transporter.sendMail(mailOptions, function (error, info) {
+//                     if (error)
+//                         console.log(error);
+//                     //else
+//                     //console.log('Email Sent:' + info.response);
+//                 })
+//         }
+
+//         res.status(201).send(doc);
+
+//     } catch (err) {
+
+//         next(err);
+
+//     }
+
+// };
+
+
+
+const Contact = require("./contact.model");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
     auth: {
         user: process.env.EMAIL_USER,
-        pass:  process.env.EMAIL_PASS,
+        pass: process.env.EMAIL_PASS
     }
-})
+});
 
-//post contact 
+// POST contact
 module.exports.contact = async (req, res, next) => {
-
     try {
-
         const contact = new Contact({
             name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone,
-    message: req.body.message
+            email: req.body.email,
+            phone: req.body.phone,
+            message: req.body.message
         });
-        var mailOptions = {
-                    from: process.env.EMAIL_USER,
-                    to: process.env.EMAIL_USER,
-                    subject: 'Website Requirement',
-                    html: `
+
+        const doc = await contact.save();
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER,
+            subject: "Website Requirement",
+            html: `
                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td align="center">
@@ -180,25 +233,32 @@ module.exports.contact = async (req, res, next) => {
         </tr>
     </table>
                 `
-                
-        }
-        
-        const doc = await contact.save();
-        if(doc){
-             transporter.sendMail(mailOptions, function (error, info) {
-                    if (error)
-                        console.log(error);
-                    //else
-                    //console.log('Email Sent:' + info.response);
-                })
-        }
+        };
 
-        res.status(201).send(doc);
+        console.log("EMAIL_USER exists:", !!process.env.EMAIL_USER);
+        console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
+
+        await transporter.verify();
+
+        console.log("Gmail SMTP connection successful");
+
+        const info = await transporter.sendMail(mailOptions);
+
+        console.log("Email sent successfully:", info.messageId);
+
+        return res.status(201).json({
+            success: true,
+            message: "Contact saved and email sent successfully",
+            data: doc
+        });
 
     } catch (err) {
+        console.error("CONTACT ERROR:", err);
 
-        next(err);
-
+        return res.status(500).json({
+            success: false,
+            message: "Contact saved/processing failed",
+            error: err.message
+        });
     }
-
 };
