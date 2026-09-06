@@ -1,0 +1,15 @@
+{
+    "development": {
+        "PORT": 3000,
+        "MONGODB_URI": "mongodb://localhost:27017/my-website",
+        "JWT_SECRET": "SECRET#123",
+        "JWT_EXP": "2d"
+    },
+    "production": {
+        "PORT": 80,
+        "MONGODB_URI": "mongodb+srv://arun70840_db_user:yKXYTB3XbMMU3ogh@cluster0.wi3wkro.mongodb.net/my-website?retryWrites=true&w=majority&appName=Cluster0",
+        "JWT_SECRET": "SECRET#123",
+        "JWT_EXP": "2m"
+    }
+}
+ 
