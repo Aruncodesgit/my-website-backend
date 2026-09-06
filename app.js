@@ -4,7 +4,9 @@ dns.setServers(["1.1.1.1", "1.0.0.1"]);
 require("dotenv").config();
 
 require('./config/config');
-require('./db/db');
+const connectDB = require("./db/db");
+
+connectDB();
 
 const cors = require('cors');
 const express = require('express'); 
