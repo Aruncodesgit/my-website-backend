@@ -76,7 +76,7 @@ module.exports.contact = async (req, res, next) => {
 
         const doc = await contact.save();
 
-        /* const mailOptions = {
+        const mailOptions = {
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_USER,
             subject: "Website Requirement",
@@ -235,16 +235,16 @@ module.exports.contact = async (req, res, next) => {
                 `
         };
 
-         console.log("EMAIL_USER exists:", !!process.env.EMAIL_USER);
-         console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
+        // console.log("EMAIL_USER exists:", !!process.env.EMAIL_USER);
+        // console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
 
        await transporter.verify();
 
-        console.log("Gmail SMTP connection successful");
+        //console.log("Gmail SMTP connection successful");
 
         const info = await transporter.sendMail(mailOptions);
 
-    console.log("Email sent successfully:", info.messageId); */
+        //console.log("Email sent successfully:", info.messageId); 
 
         return res.status(201).json({
             success: true,
@@ -253,7 +253,7 @@ module.exports.contact = async (req, res, next) => {
         });
 
     } catch (err) {
-        console.error("CONTACT ERROR:", err);
+        //console.error("CONTACT ERROR:", err);
 
         return res.status(500).json({
             success: false,
