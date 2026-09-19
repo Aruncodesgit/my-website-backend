@@ -21,6 +21,8 @@ app.use(express.json());
 app.use(express.text());
 app.use('/api', routes);
  
+require("./modules/jobs/onlineStatus");
+
 // error handler
 app.use((err, req, res, next) => {
     if (err.name === 'ValidationError') {
