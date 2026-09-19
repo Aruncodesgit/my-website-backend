@@ -111,54 +111,7 @@ module.exports.logout = async (req, res) => {
         });
     }
 };
-  
-
-module.exports.browserClose = async (req, res) => {
-    try { 
-
-        const userId = req.body;
-
-        if (!userId) {
-            return res.status(400).json({
-                success: false,
-                message: "User ID is required"
-            });
-        }
-
-        const user = await User.findByIdAndUpdate(
-            userId,
-            {
-                isOnline: false,
-                lastSeen: new Date()
-            },
-            { new: true }
-        );
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        console.log("USER MARKED OFFLINE:", userId);
-
-        return res.status(200).json({
-            success: true,
-            message: "User marked offline"
-        });
-
-    } catch (error) {
-        console.error("BROWSER CLOSE ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Failed to update status"
-        });
-    }
-};
-
- 
+    
 module.exports.heartbeat = async (req, res) => {
     try {
         const userId = req.user.id;
