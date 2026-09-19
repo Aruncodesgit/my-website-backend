@@ -157,3 +157,40 @@ module.exports.browserClose = async (req, res) => {
         });
     }
 };
+
+ 
+module.exports.heartbeat = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            {
+                isOnline: true,
+                lastSeen: new Date()
+            },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            isOnline: user.isOnline,
+            lastSeen: user.lastSeen
+        });
+
+    } catch (error) {
+        console.error("Heartbeat error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Heartbeat failed"
+        });
+    }
+};
