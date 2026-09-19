@@ -11,5 +11,6 @@ router.put("/:conversationId/read", authMiddleware.auth, messageController.markM
 router.get("/", authMiddleware.auth,  messageController.getMessages );
 router.delete("/", authMiddleware.auth,  messageController.deleteAllMessages );
 router.delete("/:id", authMiddleware.auth,  messageController.deleteMessage );
+router.put("/:id", authMiddleware.auth,  messageController.editMessage);
 
 module.exports = router;

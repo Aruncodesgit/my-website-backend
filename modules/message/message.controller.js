@@ -160,3 +160,49 @@ module.exports.deleteMessage = async (req, res) => {
         });
     }
 };
+
+
+module.exports.editMessage = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { id } = req.params;
+        const { text } = req.body;
+
+        if (!text || !text.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Message text is required"
+            });
+        }
+
+        const message = await Message.findOne({
+            _id: id,
+            senderId: userId
+        });
+
+        if (!message) {
+            return res.status(404).json({
+                success: false,
+                message: "Message not found or you cannot edit this message"
+            });
+        }
+
+        message.text = text.trim();
+        message.isEdited = true;
+
+        await message.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Message edited successfully",
+            data: message
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to edit message",
+            error: err.message
+        });
+    }
+};
