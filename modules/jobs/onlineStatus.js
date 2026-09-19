@@ -1,6 +1,6 @@
 const User = require("../user/user.model");
 
-const ONLINE_TIMEOUT = 30 * 1000; // 30 seconds
+const ONLINE_TIMEOUT = 20 * 1000; // 20 seconds
 
 const checkOfflineUsers = async () => {
     try {
@@ -31,6 +31,6 @@ const checkOfflineUsers = async () => {
     }
 };
 
-setInterval(checkOfflineUsers, 10 * 1000);
+setInterval(checkOfflineUsers,  5 * 1000);
 
 module.exports = checkOfflineUsers;
