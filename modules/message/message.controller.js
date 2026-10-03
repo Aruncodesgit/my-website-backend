@@ -8,7 +8,8 @@ module.exports.sendMessage = async (req, res) => {
         const {
             conversationId,
             receiverId,
-            text
+            text,
+            replyTo
         } = req.body;
 
         if (!conversationId || !receiverId || !text) {
@@ -38,8 +39,10 @@ module.exports.sendMessage = async (req, res) => {
             conversationId,
             senderId,
             receiverId,
-            text
+            text,
+            replyTo: replyTo || null
         });
+
 
         return res.status(201).json({
             success: true,
@@ -55,7 +58,7 @@ module.exports.sendMessage = async (req, res) => {
         });
     }
 };
- 
+
 const deleteAt = new Date(Date.now() + 20 * 60 * 1000);
 
 module.exports.markMessagesAsRead = async (req, res) => {
@@ -94,7 +97,10 @@ module.exports.markMessagesAsRead = async (req, res) => {
 
 module.exports.getMessages = async (req, res) => {
     try {
-        const messages = await Message.find()
+        const messages = await Message.find({
+
+        })
+            .populate('replyTo')
             .sort({ createdAt: 1 });
 
         return res.status(200).json({
