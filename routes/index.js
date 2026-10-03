@@ -9,6 +9,8 @@ const messageRoutes = require("../modules/message/message.router.js");
 const youtubeRoutes = require("../modules/youtube/youtube.router.js"); 
 const activityRoutes = require("../modules/activity/activity.router.js"); 
 const currentPlayRoutes = require("../modules/currentPlay/currentplay.router.js"); 
+const pushSubscriptionRoutes = require("../modules/pushSub/pushSub.router.js"); 
+const settingsRoutes = require("../modules/settings/settings.router.js");
 
 router.use("/contact", contactRoutes); 
 router.use("/user", userRoutes); 
@@ -19,4 +21,7 @@ router.use("/message", messageRoutes);
 router.use("/youtube", youtubeRoutes);
 router.use("/activity", activityRoutes); 
 router.use("/currentPlay", currentPlayRoutes); 
+router.use("/pushSubs", pushSubscriptionRoutes);
+router.use("/settings", settingsRoutes); 
+
 module.exports = router;

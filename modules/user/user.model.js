@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema(
     lastSeen: {
       type: Date,
       default: null
+    },
+    notificationsEnabled: {
+      type: Boolean,
+      default: true
     }
   },
   {
