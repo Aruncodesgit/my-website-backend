@@ -76,7 +76,7 @@ async function sendPushNotification(
 
       notification: {
 
-        // title: `${senderName} has logged in`,
+        title: `${senderName} has logged in`,
 
         // body:
         //   `${senderName} is now online`,
