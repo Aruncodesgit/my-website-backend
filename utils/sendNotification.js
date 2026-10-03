@@ -76,22 +76,22 @@ async function sendPushNotification(
 
       notification: {
 
-        title: `${senderName} has logged in`,
+        // title: `${senderName} has logged in`,
 
-        body:
-          `${senderName} is now online`,
+        // body:
+        //   `${senderName} is now online`,
 
-        icon:
-          '/icons/icon-192x192.png',
+        // icon:
+        //   '/icons/icon-192x192.png',
 
-        badge:
-          '/icons/icon-72x72.png',
+        // badge:
+        //   '/icons/icon-72x72.png',
 
-        data: {
+        // data: {
 
-          url: '/login'
+        //   url: '/login'
 
-        }
+        // }
 
       }
 
