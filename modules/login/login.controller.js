@@ -130,7 +130,8 @@ module.exports.login = async (req, res) => {
           user.isOnline,
 
         notificationsEnabled:
-          user.notificationsEnabled
+          user.notificationsEnabled,
+          chatUserId: otherUser._id
 
       }
 
