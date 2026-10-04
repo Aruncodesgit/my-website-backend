@@ -59,7 +59,7 @@ module.exports.sendMessage = async (req, res) => {
     }
 };
 
-const deleteAt = new Date(Date.now() + 20 * 60 * 1000);
+//const deleteAt = new Date(Date.now() + 20 * 60 * 1000);
 
 module.exports.markMessagesAsRead = async (req, res) => {
     try {
@@ -74,8 +74,7 @@ module.exports.markMessagesAsRead = async (req, res) => {
             },
             {
                 $set: {
-                    isRead: true,
-                    deleteAt: deleteAt
+                    isRead: true
                 }
             }
         );
