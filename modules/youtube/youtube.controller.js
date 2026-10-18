@@ -138,6 +138,28 @@ exports.markYoutubeLinkAsRead = async (req, res) => {
         });
     }
 };
+ 
+
+module.exports.getUnreadLinkCount = async (req, res) => {
+  try {
+    const unreadCount = await YoutubeLink.countDocuments({
+      readBy: req.user.id,
+      isRead: false
+    });
+
+    return res.status(200).json({
+      success: true,
+      unreadCount
+    });
+  } catch (error) {
+    console.error('Unread Youtube Link count error:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
 
 
 exports.deleteAllYoutubeLinks = async (req, res) => {

@@ -115,6 +115,28 @@ module.exports.getMessages = async (req, res) => {
 };
 
 
+module.exports.getUnreadMessageCount = async (req, res) => {
+  try {
+    const unreadCount = await Message.countDocuments({
+      receiverId: req.user.id,
+      isRead: false
+    });
+
+    return res.status(200).json({
+      success: true,
+      unreadCount
+    });
+  } catch (error) {
+    console.error('Unread message count error:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+
 module.exports.deleteAllMessages = async (req, res) => {
     try {
 
