@@ -5,159 +5,235 @@ const sendPushNotification = require('../../utils/sendNotification');
 
 
 module.exports.login = async (req, res) => {
-
   try {
+    const { password } = req.body;
 
-    const {
-      email,
-      password
-    } = req.body;
-
-
-    // FIND USER
-    const user =
-      await User.findOne({
-        email
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password is required'
       });
+    }
 
+    // FIND USER BY PASSWORD
+    const users = await User.find({});
+
+    let user = null;
+
+    for (const existingUser of users) {
+      if (await bcrypt.compare(password, existingUser.password)) {
+        user = existingUser;
+        break;
+      }
+    }
 
     if (!user) {
-
       return res.status(401).json({
-
         success: false,
-
-        message:
-          'Invalid email or password'
-
+        message: 'Invalid password'
       });
-
     }
-
-
-    // CHECK PASSWORD
-    const passwordMatch =
-      await bcrypt.compare(
-        password,
-        user.password
-      );
-
-
-    if (!passwordMatch) {
-
-      return res.status(401).json({
-
-        success: false,
-
-        message:
-          'Invalid email or password'
-
-      });
-
-    }
-
 
     // JWT
-    const token =
-      jwt.sign(
-
-        {
-          id: user._id
-
-        },
-
-        process.env.JWT_SECRET,
-
-        {
-          expiresIn: '7d'
-        }
-
-      );
-
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
 
     // SET ONLINE
     user.isOnline = true;
-
     await user.save();
 
-
     // FIND OTHER USER
-    const otherUser =
-      await User.findOne({
-
-        _id: {
-          $ne: user._id
-        }
-
-      });
-
+    const otherUser = await User.findOne({
+      _id: { $ne: user._id }
+    });
 
     // SEND LOGIN NOTIFICATION
     if (otherUser) {
-
-      await sendPushNotification(
-
-        otherUser._id,
-
-        user.name
-
-      );
-
+      await sendPushNotification(otherUser._id, user.name);
     }
 
-
     return res.status(200).json({
-
       success: true,
-
-      message:
-        'Login successful',
-
+      message: 'Login successful',
       token,
-
       user: {
-
-        _id:
-          user._id,
-
-        name:
-          user.name,
-
-        email:
-          user.email,
-
-        isOnline:
-          user.isOnline,
-
-        notificationsEnabled:
-          user.notificationsEnabled,
-          chatUserId: otherUser._id
-
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isOnline: user.isOnline,
+        notificationsEnabled: user.notificationsEnabled,
+        chatUserId: otherUser ? otherUser._id : null
       }
-
     });
-
 
   } catch (error) {
-
-    console.error(
-      'Login error:',
-      error
-    );
-
+    console.error('Login error:', error);
 
     return res.status(500).json({
-
       success: false,
-
-      message:
-        'Server error'
-
+      message: 'Server error'
     });
-
   }
-
 };
+
+
+// module.exports.login = async (req, res) => {
+
+//   try {
+
+//     const {
+//       email,
+//       password
+//     } = req.body;
+
+
+//     // FIND USER
+//     const user =
+//       await User.findOne({
+//         email
+//       });
+
+
+//     if (!user) {
+
+//       return res.status(401).json({
+
+//         success: false,
+
+//         message:
+//           'Invalid email or password'
+
+//       });
+
+//     }
+
+
+//     // CHECK PASSWORD
+//     const passwordMatch =
+//       await bcrypt.compare(
+//         password,
+//         user.password
+//       );
+
+
+//     if (!passwordMatch) {
+
+//       return res.status(401).json({
+
+//         success: false,
+
+//         message:
+//           'Invalid email or password'
+
+//       });
+
+//     }
+
+
+//     // JWT
+//     const token =
+//       jwt.sign(
+
+//         {
+//           id: user._id
+
+//         },
+
+//         process.env.JWT_SECRET,
+
+//         {
+//           expiresIn: '7d'
+//         }
+
+//       );
+
+
+//     // SET ONLINE
+//     user.isOnline = true;
+
+//     await user.save();
+
+
+//     // FIND OTHER USER
+//     const otherUser =
+//       await User.findOne({
+
+//         _id: {
+//           $ne: user._id
+//         }
+
+//       });
+
+
+//     // SEND LOGIN NOTIFICATION
+//     if (otherUser) {
+
+//       await sendPushNotification(
+
+//         otherUser._id,
+
+//         user.name
+
+//       );
+
+//     }
+
+
+//     return res.status(200).json({
+
+//       success: true,
+
+//       message:
+//         'Login successful',
+
+//       token,
+
+//       user: {
+
+//         _id:
+//           user._id,
+
+//         name:
+//           user.name,
+
+//         email:
+//           user.email,
+
+//         isOnline:
+//           user.isOnline,
+
+//         notificationsEnabled:
+//           user.notificationsEnabled,
+//           chatUserId: otherUser._id
+
+//       }
+
+//     });
+
+
+//   } catch (error) {
+
+//     console.error(
+//       'Login error:',
+//       error
+//     );
+
+
+//     return res.status(500).json({
+
+//       success: false,
+
+//       message:
+//         'Server error'
+
+//     });
+
+//   }
+
+// };
 
 
 // module.exports.login = async (req, res) => {
